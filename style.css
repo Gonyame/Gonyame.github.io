@@ -953,7 +953,7 @@ body.theme-dark-pixel .skill-item-bar .bar { background: rgba(255,255,255,0.05);
   transition: all 0.2s;
 }
 
-body.theme-dark-pixel .nb-project-row { background: rgba(255,255,255,0.02); }
+body.theme-dark-pixel .nb-project-row:not(.active) { background: rgba(255,255,255,0.02); }
 
 .nb-project-row:hover {
   background: rgba(99, 113, 244, 0.05);
@@ -963,6 +963,11 @@ body.theme-dark-pixel .nb-project-row { background: rgba(255,255,255,0.02); }
 .nb-project-row.active {
   background: var(--accent);
   color: #fff !important;
+  border-color: var(--accent);
+}
+
+body.theme-dark-pixel .nb-project-row.active {
+  box-shadow: 0 0 10px rgba(229, 62, 62, 0.35);
 }
 
 .nb-project-row.active span { color: #fff !important; }
@@ -1798,13 +1803,40 @@ body.theme-dark-pixel .carousel-dots {
 /* MEDIA QUERIES (RESPONSIVIDAD TOTAL) */
 /* ================================================================= */
 @media (max-width: 1024px) {
-  /* En tablets y móviles, ocultar el escritorio y forzar la vista clásica */
+  /* Mostrar control flotante en tablets y móviles */
   .view-toggle-container {
-    display: none; /* No se muestra el alternador */
+    display: flex !important;
+    bottom: 20px;
+    padding: 6px 12px;
   }
   
-  body.desk-mode #desk-view { display: none; }
-  body.desk-mode #classic-view { display: block; }
+  /* En tablets y móviles, reordenar el escritorio interactivo en una sola columna */
+  .desk-container {
+    padding: 10px 10px 100px !important;
+    width: 100vw !important;
+    min-height: 100vh !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+  .desk-surface {
+    padding: 15px !important;
+    border-radius: 16px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .desk-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+    width: 100% !important;
+  }
+  .desk-left-col, .desk-right-col {
+    width: 100% !important;
+    max-width: 450px !important;
+    margin: 0 auto !important;
+  }
+  .desk-center-col {
+    width: 100% !important;
+  }
   
   .projects-grid { grid-template-columns: repeat(2, 1fr); }
   .gallery-categories { grid-template-columns: repeat(2, 1fr); }
@@ -1843,6 +1875,77 @@ body.theme-dark-pixel .carousel-dots {
   }
   .menu-btn {
     display: block;
+  }
+  
+  /* Ajustar barra de controles flotantes en móvil */
+  .view-toggle-container {
+    bottom: 15px !important;
+    gap: 4px !important;
+    padding: 4px 8px !important;
+  }
+  .view-toggle-container .toggle-view-btn .text {
+    display: none !important;
+  }
+  .view-toggle-container .toggle-view-btn {
+    padding: 8px 12px !important;
+    gap: 0 !important;
+  }
+  .view-toggle-container .theme-cycle-btn,
+  .view-toggle-container .lang-toggle-btn {
+    margin-left: 4px !important;
+    height: 32px !important;
+  }
+  
+  /* Apilar páginas izquierda y derecha de la libreta */
+  .notebook {
+    flex-direction: column !important;
+    height: auto !important;
+    min-height: auto !important;
+  }
+  .notebook::after {
+    display: none !important; /* Quitar la espiral en móvil */
+  }
+  .notebook-page.active {
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    position: relative !important;
+  }
+  .page-left, .page-right {
+    width: 100% !important;
+    max-height: none !important;
+    padding: 20px 24px !important;
+    position: relative !important;
+  }
+  .page-left {
+    border-right: none !important;
+    border-bottom: 1px dashed rgba(0, 0, 0, 0.08);
+    padding-bottom: 24px !important;
+  }
+  body.theme-dark-pixel .page-left {
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+  }
+  .page-right {
+    padding-top: 24px !important;
+  }
+  /* Ocultar número de página en móvil */
+  .page-footer-nav {
+    display: none !important;
+  }
+  /* Desplazamiento horizontal de pestañas */
+  .notebook-tabs {
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    flex-wrap: nowrap !important;
+    padding-bottom: 4px !important;
+    margin-bottom: 0 !important;
+    scrollbar-width: none !important; /* Firefox */
+  }
+  .notebook-tabs::-webkit-scrollbar {
+    display: none !important; /* Chrome, Safari, Opera */
+  }
+  .tab-btn {
+    flex: 0 0 auto !important;
   }
 }
 

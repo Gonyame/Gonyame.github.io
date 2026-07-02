@@ -374,21 +374,19 @@ function initViewToggler() {
     setView('classic');
   });
   
-  function handleResize() {
-    if (window.innerWidth < 1024) {
-      setView('classic');
-    }
+  // Establecer vista inicial según el ancho de pantalla al cargar
+  if (window.innerWidth >= 1024) {
+    setView('desk');
+  } else {
+    setView('classic');
   }
-  
-  window.addEventListener('resize', handleResize);
-  handleResize();
 }
 
 function setView(viewName) {
   const toggleDeskBtn = document.getElementById('toggleDeskBtn');
   const toggleClassicBtn = document.getElementById('toggleClassicBtn');
   
-  if (viewName === 'desk' && window.innerWidth >= 1024) {
+  if (viewName === 'desk') {
     document.body.classList.remove('classic-mode');
     document.body.classList.add('desk-mode');
     toggleDeskBtn?.classList.add('active');
@@ -1136,6 +1134,46 @@ function playRetroBeep() {
   }
 }
 
+function playStickerSound(type) {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    
+    if (type === 'drag') {
+      // Sonido de despegado rápido
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(250, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(450, ctx.currentTime + 0.06);
+      
+      gain.gain.setValueAtTime(0.08, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
+      
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.06);
+    } else if (type === 'drop') {
+      // Sonido "tac" magnético al soltar
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(180, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(70, ctx.currentTime + 0.08);
+      
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+      
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.08);
+    }
+  } catch (e) {
+    // Evitar que falle sin interacción previa
+  }
+}
+
 /* ================================================================= */
 /* PEGATINAS ARRASTRABLES */
 /* ================================================================= */
@@ -1158,6 +1196,9 @@ function setupStickerDragging() {
     
     function dragStart(e) {
       e.preventDefault();
+      
+      // Sonido al despegar
+      playStickerSound('drag');
       
       let clientX = e.clientX;
       let clientY = e.clientY;
@@ -1203,6 +1244,9 @@ function setupStickerDragging() {
         top: st.style.top
       };
       localStorage.setItem('sticker_pos_' + st.id, JSON.stringify(coords));
+      
+      // Sonido al soltar (tac)
+      playStickerSound('drop');
     }
   });
 }
