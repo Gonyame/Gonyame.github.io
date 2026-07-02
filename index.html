@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ariadna — Portfolio</title>
+
+  <!-- Google Fonts: Syne (Artistic Title) & Inter (Clean Text) + Cursivas -->
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600;700&family=Great+Vibes&family=Bonheur+Royale&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+  <meta name="description" content="Portfolio of Ariadna — artist and game developer. 3D modeling, concept art, UI/UX, texturing." />
+  
+  <!-- Three.js CDN para el visor 3D interactivo -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body class="desk-mode">
+
+  <!-- FONDO GENERAL DE PINCELAZOS (se mantiene como sello artístico) -->
+  <div class="canvas-bg">
+    <div class="brush brush1"></div>
+    <div class="brush brush2"></div>
+    <div class="brush brush3"></div>
+    <div class="brush brush4"></div>
+    <div class="brush brush5"></div>
+    <div class="brush brush6"></div>
+    <img src="assets/BG-Dragon.png" alt="" class="bg-dragon">
+  </div>
+
+  <!-- CONTROL FLOTANTE DE VISTA Y AJUSTES (En la parte inferior) -->
+  <div class="view-toggle-container">
+    <button id="toggleDeskBtn" class="toggle-view-btn active" data-view="desk">
+      <span class="icon">🎮</span> <span class="text" data-t="toggle_desk">Interactive Desk</span>
+    </button>
+    <button id="toggleClassicBtn" class="toggle-view-btn" data-view="classic">
+      <span class="icon">📄</span> <span class="text" data-t="toggle_classic">Classic View</span>
+    </button>
+    <button id="themeToggleBtn" class="theme-cycle-btn" title="Change Theme / Cambiar Color">🎨</button>
+    <button id="langToggleBtn" class="lang-toggle-btn" title="Change Language / Cambiar Idioma">🌐 EN</button>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- VISTA 1: ESCRITORIO INTERACTIVO (Ideal para Itch.io y reclutadores de videojuegos) -->
+  <!-- ================================================================= -->
+  <main id="desk-view" class="desk-container">
+    <div class="desk-surface">
+      <div class="desk-grid">
+        
+        <!-- COLUMNA IZQUIERDA: Visor 3D y Consola Retro -->
+        <div class="desk-left-col">
+          <!-- Monitor/Visor 3D -->
+          <div class="desk-item monitor-widget" id="desk-monitor">
+            <div class="widget-header">
+              <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+              <span class="title" data-t="widget_3d_title">Interactive 3D Viewer</span>
+            </div>
+            <div class="monitor-screen-wrapper">
+              <canvas id="three-canvas"></canvas>
+              <div class="monitor-controls">
+                <button id="btnModelPrev" aria-label="Previous model">◀</button>
+                <span id="modelName">Loading...</span>
+                <button id="btnModelNext" aria-label="Next model">▶</button>
+              </div>
+            </div>
+            <div class="monitor-base"></div>
+          </div>
+
+          <!-- Consola Retro -->
+          <div class="desk-item console-widget" id="desk-console">
+            <div class="console-body">
+              <div class="console-screen-bezel">
+                <div class="console-screen" id="consoleScreen">
+                  <div class="console-boot" id="consoleBoot">
+                    <span class="pixel-text">ARI-BOY COLOR</span>
+                  </div>
+                  <div class="console-game-menu" id="consoleGameMenu">
+                    <span class="game-insert-prompt" data-t="console_prompt">INSERT A CARTRIDGE!</span>
+                  </div>
+                  <div class="console-game-play" id="consoleGamePlay">
+                    <!-- Detalle del juego insertado -->
+                    <span id="consoleGameTitle" class="pixel-text">GAME</span>
+                    <a id="consoleGameLink" href="#" target="_blank" class="pixel-btn" data-t="console_view_btn">VIEW GAME</a>
+                  </div>
+                </div>
+              </div>
+              <div class="console-dpad">
+                <div class="dpad-up"></div>
+                <div class="dpad-left"></div>
+                <div class="dpad-center"></div>
+                <div class="dpad-right"></div>
+                <div class="dpad-down"></div>
+              </div>
+              <div class="console-buttons">
+                <button class="btn-action b-btn">B</button>
+                <button class="btn-action a-btn">A</button>
+              </div>
+              <div class="console-start-select">
+                <div class="btn-ss select-btn"></div>
+                <div class="btn-ss start-btn"></div>
+              </div>
+            </div>
+            
+            <!-- Cartuchos de juegos en la mesa -->
+            <div class="cartridge-pile">
+              <div class="cartridge" data-game="0" draggable="true">
+                <span class="cart-label">Magical</span>
+              </div>
+              <div class="cartridge" data-game="1" draggable="true">
+                <span class="cart-label">Feather</span>
+              </div>
+              <div class="cartridge" data-game="2" draggable="true">
+                <span class="cart-label">PlushOut</span>
+              </div>
+              <div class="cartridge" data-game="3" draggable="true">
+                <span class="cart-label">SeedHero</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- COLUMNA CENTRAL: Libreta / Portfolio Binder -->
+        <div class="desk-center-col">
+          <div class="notebook-container">
+            <!-- Pestañas de salto rápido -->
+            <div class="notebook-tabs">
+              <button class="tab-btn active" data-page="0" data-t="tab_cover">Cover</button>
+              <button class="tab-btn" data-page="1" data-t="tab_about">About me</button>
+              <button class="tab-btn" data-page="2" data-t="tab_skills">Skills</button>
+              <button class="tab-btn" data-page="3" data-t="tab_games">Games</button>
+              <button class="tab-btn" data-page="4" data-t="tab_gallery_3d">3D Gallery</button>
+              <button class="tab-btn" data-page="5" data-t="tab_gallery_concept">Concept Art</button>
+              <button class="tab-btn" data-page="6" data-t="tab_contact">Contact</button>
+            </div>
+            
+            <div class="notebook" id="notebook">
+              <!-- PÁGINA 1: PORTADA (Dividida en izquierda y derecha para no cortar la cara) -->
+              <div class="notebook-page page-spread active" data-page-index="0">
+                <div class="page-left cover-left">
+                  <div class="inside-cover-deco">
+                    <p class="handwritten" data-t="cover_left_title" style="font-size: 2.6rem; text-align: center; margin-top: 50px;">Ari's<br>Creative Space</p>
+                    <p style="text-align: center; font-size: 0.8rem; font-weight: 700; color: var(--muted); opacity: 0.7;">Est. 2022</p>
+                  </div>
+                </div>
+                <div class="page-right cover-right">
+                  <div class="cover-content">
+                    <div class="sketchbook-brand" data-t="cover_brand">SKETCHBOOK & PORTFOLIO</div>
+                    <div class="cover-frame">
+                      <img src="assets/hero-portrait.png" alt="Ariadna — retrato" class="cover-portrait">
+                    </div>
+                    <h1 class="cover-title">Ariadna</h1>
+                    <p class="cover-subtitle" data-t="cover_subtitle">3D Artist • Concept Art • Game Developer</p>
+                    <button class="btn sketchbook-open-btn" id="openNotebookBtn" data-t="cover_open_btn">Open Sketchbook 📖</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- PÁGINA 2: SOBRE MÍ -->
+              <div class="notebook-page page-spread" data-page-index="1">
+                <div class="page-left">
+                  <h2 data-t="nb_about_title">About me</h2>
+                  <p data-t="nb_about_p">I am an artist, designer, and game developer. Since I was a child I loved inventing worlds and creatures in my notebooks; today I transform them into digital 3D universes and detailed concept art.</p>
+                  <h3 data-t="about_edu">Education</h3>
+                  <p id="nb_about_edu_p" data-t="nb_about_edu_val"><strong>B.S. in Game Design and Development</strong><br>Cuauhtemoc University (2022 - 2026)<br>GPA of Excellence: <strong>9.63</strong></p>
+                  <div class="page-footer-nav" data-t="nb_page_1_of_6">Page 1/6</div>
+                </div>
+                <div class="page-right">
+                  <h3 data-t="nb_about_phil">My Philosophy</h3>
+                  <p data-t="nb_about_phil_p">I focus on telling stories through objects, characters, and colors. I enjoy 3D modeling, bringing characters to life with rigging and animation, and giving them the final texturing touch to create memorable experiences.</p>
+                  <div class="photo-polaroid">
+                    <img src="assets/hero-portrait.png" alt="Ari">
+                    <div class="polaroid-caption" data-t="nb_about_polaroid">Creating universes! ✨</div>
+                  </div>
+                  <div class="page-footer-nav" data-t="nb_page_2_of_6">Page 2/6</div>
+                </div>
+              </div>
+
+              <!-- PÁGINA 3: HABILIDADES & SOFTWARE -->
+              <div class="notebook-page page-spread" data-page-index="2">
+                <div class="page-left">
+                  <h2 data-t="nb_skills_title">Skills</h2>
+                  <div class="notebook-skills-list">
+                    <div class="skill-item-bar">
+                      <span data-t="nb_skills_mod">3D Modeling / Sculpting</span>
+                      <div class="bar"><div class="fill" style="width: 90%;"></div></div>
+                    </div>
+                    <div class="skill-item-bar">
+                      <span data-t="nb_skills_concept">Concept Art / Illustration</span>
+                      <div class="bar"><div class="fill" style="width: 85%;"></div></div>
+                    </div>
+                    <div class="skill-item-bar">
+                      <span data-t="nb_skills_color">Coloring / Texturing</span>
+                      <div class="bar"><div class="fill" style="width: 95%;"></div></div>
+                    </div>
+                    <div class="skill-item-bar">
+                      <span data-t="nb_skills_rig">Rigging & Animation</span>
+                      <div class="bar"><div class="fill" style="width: 80%;"></div></div>
+                    </div>
+                    <div class="skill-item-bar">
+                      <span data-t="nb_skills_ui">UI / UX for Games</span>
+                      <div class="bar"><div class="fill" style="width: 85%;"></div></div>
+                    </div>
+                  </div>
+                  <div class="page-footer-nav" data-t="nb_page_3_of_6">Page 3/6</div>
+                </div>
+                <div class="page-right">
+                  <h3 data-t="nb_skills_soft">Tools / Software</h3>
+                  <ul class="soft-grid-notebook">
+                    <li><img src="assets/icons/photoshop.png" alt="Photoshop"><span>Photoshop</span></li>
+                    <li><img src="assets/icons/blender.png" alt="Blender"><span>Blender</span></li>
+                    <li><img src="assets/icons/maya.png" alt="Maya"><span>Maya</span></li>
+                    <li><img src="assets/icons/substance.png" alt="Substance"><span>Substance</span></li>
+                    <li><img src="assets/icons/unity.png" alt="Unity"><span>Unity</span></li>
+                    <li><img src="assets/icons/unreal.png" alt="Unreal"><span>Unreal Engine</span></li>
+                    <li><img src="assets/icons/clipStudio.png" alt="Clip Studio Paint"><span>Clip Studio</span></li>
+                  </ul>
+                  <div class="page-footer-nav" data-t="nb_page_4_of_6">Page 4/6</div>
+                </div>
+              </div>
+
+              <!-- PÁGINA 4: JUEGOS Y PROYECTOS -->
+              <div class="notebook-page page-spread" data-page-index="3">
+                <div class="page-left">
+                  <h2 data-t="nb_games_title">Video Games</h2>
+                  <p class="muted-small" data-t="nb_games_prompt">Select a game to view details:</p>
+                  <div class="notebook-project-list" id="notebookProjectList">
+                    <!-- Generado dinámicamente -->
+                  </div>
+                  <div class="page-footer-nav" data-t="nb_page_5_of_6">Page 5/6</div>
+                </div>
+                <div class="page-right" id="notebookProjectDetail">
+                  <div class="project-placeholder-notebook">
+                    <p data-t="nb_games_placeholder">👈 Select a game or drag a cartridge into the console to see development details.</p>
+                  </div>
+                  <div class="page-footer-nav" data-t="nb_page_6_of_6">Page 6/6</div>
+                </div>
+              </div>
+
+              <!-- PÁGINA 5: GALERÍA 3D & DIORAMAS -->
+              <div class="notebook-page page-spread" data-page-index="4">
+                <div class="page-left">
+                  <h2 data-t="nb_gallery_dio">3D Dioramas</h2>
+                  <div class="carousel-wrapper notebook-carousel">
+                    <div class="carousel" id="carousel-dio-nb" data-category="Dio"></div>
+                    <div class="carousel-dots"></div>
+                  </div>
+                  <div class="page-footer-nav" data-t="nb_gallery_dio">3D Dioramas</div>
+                </div>
+                <div class="page-right">
+                  <h2 data-t="nb_gallery_mod">3D Modeling</h2>
+                  <div class="carousel-wrapper notebook-carousel">
+                    <div class="carousel" id="carousel-modelado-nb" data-category="Modelado"></div>
+                    <div class="carousel-dots"></div>
+                  </div>
+                  <div class="page-footer-nav" data-t="nb_gallery_props">Assets & Props</div>
+                </div>
+              </div>
+
+              <!-- PÁGINA 6: CONCEPT ART & COLOR -->
+              <div class="notebook-page page-spread" data-page-index="5">
+                <div class="page-left">
+                  <h2 data-t="nb_gallery_concept">Concept Art</h2>
+                  <div class="carousel-wrapper notebook-carousel">
+                    <div class="carousel" id="carousel-concept-nb" data-category="Concept"></div>
+                    <div class="carousel-dots"></div>
+                  </div>
+                  <div class="page-footer-nav" data-t="nb_gallery_2d">2D Design</div>
+                </div>
+                <div class="page-right">
+                  <h3 data-t="nb_gallery_color">Coloring & Art</h3>
+                  <p class="handwritten" data-t="nb_gallery_color_p">Designing creatures, defining color palettes, and bringing magical atmospheres to every scene. Color is the key to guide the player's emotions.</p>
+                  <div class="sketch-decoration">
+                    <img src="assets/gallery/Concept-01.png" alt="Sketch" class="decor-sketch">
+                  </div>
+                  <div class="page-footer-nav" data-t="nb_gallery_atm">Atmospheres</div>
+                </div>
+              </div>
+
+              <!-- PÁGINA 7: CONTACTO -->
+              <div class="notebook-page page-spread" data-page-index="6">
+                <div class="page-left">
+                  <h2 data-t="tab_contact">Contact</h2>
+                  <ul class="contact-notebook-list">
+                    <li>📧 <a href="mailto:aryreyessandoval@gmail.com">aryreyessandoval@gmail.com</a></li>
+                    <li>🎮 <a href="https://gonyame.itch.io" target="_blank" rel="noopener">gonyame.itch.io</a></li>
+                    <li>💼 <a href="https://www.linkedin.com/in/aryreyes" target="_blank" rel="noopener">linkedin.com/in/aryreyes</a></li>
+                    <li>🎨 <a href="https://www.artstation.com/gonyame" target="_blank" rel="noopener">artstation.com/gonyame</a></li>
+                    <li>📸 <a href="https://www.instagram.com/gonyame_/" target="_blank" rel="noopener">@gonyame_</a></li>
+                  </ul>
+                  <p data-t="contact_loc">Location: San Luis Potosi, Mexico</p>
+                  <div class="page-footer-nav" data-t="tab_contact">Contact</div>
+                </div>
+                <div class="page-right cover-back-inner">
+                  <h3 data-t="contact_cv">Download CV</h3>
+                  <a class="btn cv-download-notebook" href="assets/CV-Ariadna.pdf" download data-t="nb_contact_cv_btn">CV in PDF 📥</a>
+                  <div class="signature-wrap">
+                    <p class="signature-text">Ariadna Reyes</p>
+                  </div>
+                  <p class="handwritten-thanks" data-t="nb_contact_thanks">Thank you for visiting my creative space!</p>
+                  <div class="page-footer-nav" data-t="nb_contact_end">End</div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Botones de navegación del cuaderno -->
+            <div class="notebook-nav">
+              <button id="btnPrevPage" class="btn ghost-btn" data-t="nb_nav_prev">◀ Prev</button>
+              <button id="btnNextPage" class="btn ghost-btn" data-t="nb_nav_next">Next ▶</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- COLUMNA DERECHA: Tableta de Dibujo y Taza de Café -->
+        <div class="desk-right-col">
+          <!-- Tableta Gráfica / Bloc de Dibujo -->
+          <div class="desk-item tablet-widget" id="desk-tablet">
+            <div class="widget-header">
+              <span class="brand">PRO PEN TABLET</span>
+            </div>
+            <div class="tablet-surface">
+              <canvas id="scribble-canvas"></canvas>
+              <div class="tablet-toolbar">
+                <button id="btnClrTablet" class="tab-tool-btn" title="Clear Canvas / Limpiar lienzo">🗑️</button>
+                <button class="tab-tool-color active" data-color="#6371f4" style="background:#6371f4;"></button>
+                <button class="tab-tool-color" data-color="#ff7b90" style="background:#ff7b90;"></button>
+                <button class="tab-tool-color" data-color="#222" style="background:#222;"></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Taza de Café & Pegatinas -->
+          <div class="interactive-decor-group">
+            <!-- Taza de café interactiva -->
+            <div class="coffee-mug" id="desk-mug" title="Click to change the desk theme / Haz clic para cambiar el tema">
+              <div class="steam-container">
+                <span style="--i:1;"></span>
+                <span style="--i:3;"></span>
+                <span style="--i:2;"></span>
+              </div>
+              <div class="mug-body">
+                <div class="mug-handle"></div>
+                <div class="mug-logo">🎨</div>
+              </div>
+            </div>
+            
+            <!-- Caja de Herramientas / Lápices -->
+            <div class="pencil-cup">
+              <div class="pencil pencil-blue"></div>
+              <div class="pencil pencil-pink"></div>
+              <div class="stylus"></div>
+              <div class="cup-body"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PEGATINAS DRAGGABLES (Arrastrables por toda la pantalla de escritorio) -->
+    <div class="sticker dragon-sticker" id="sticker-dragon" title="Drag me / Arrástrame">
+      <img src="assets/End-Dragon.png" alt="Sticker Dragon">
+    </div>
+    <div class="sticker kitty-sticker" id="sticker-kitty" title="Drag me / Arrástrame">
+      <span class="sticker-emoji">🐱</span>
+    </div>
+    <div class="sticker star-sticker" id="sticker-star" title="Drag me / Arrástrame">
+      <span class="sticker-emoji">⭐</span>
+    </div>
+    <div class="sticker palette-sticker" id="sticker-palette" title="Drag me / Arrástrame">
+      <span class="sticker-emoji">🎨</span>
+    </div>
+  </main>
+
+  <!-- ================================================================= -->
+  <!-- VISTA 2: VISTA CLÁSICA / TRADICIONAL (Para recruiters tradicionales) -->
+  <!-- ================================================================= -->
+  <div id="classic-view" class="classic-container">
+    <header class="site-header">
+      <nav class="nav container">
+        <a class="logo" href="#">Hello I'm <span>Ariadna</span></a>
+        <ul class="nav-links">
+          <li><a href="#about" data-t="nav_about">About me</a></li>
+          <li><a href="#skills" data-t="nav_skills">Skills</a></li>
+          <li><a href="#projects" data-t="nav_projects">Projects</a></li>
+          <li><a href="#gallery" data-t="nav_gallery">Gallery</a></li>
+          <li><a href="#contact" data-t="nav_contact">Contact</a></li>
+        </ul>
+        <button id="menuBtn" class="menu-btn" aria-label="Open menu">☰</button>
+      </nav>
+    </header>
+
+    <!-- HERO -->
+    <section id="hero" class="hero">
+      <div class="hero-inner container">
+        <div class="hero-left">
+          <div class="hero-title-wrap">
+            <span class="hero-hola" data-t="hero_hola">Hello</span>
+            <span class="hero-soy" data-t="hero_soy">I am</span>
+            <span class="hero-signature">Ariadna</span>
+          </div>
+          <p class="lead" data-t="hero_lead">Artist, designer, and game developer. I transform ideas into digital worlds that inspire curiosity and emotion.</p>
+          <div class="hero-cta">
+            <a href="#projects" class="btn" data-t="hero_cta_proj">View projects</a>
+            <a href="#contact" class="btn ghost" data-t="hero_cta_contact">Contact</a>
+          </div>
+          <ul class="quick-info">
+            <li><span data-t="hero_info_uni">University:</span> <strong data-t="hero_info_uni_val">Cuauhtemoc University (GPA: 9.63)</strong></li>
+            <li><span data-t="hero_info_areas">Areas:</span> <strong>3D Modeling • Texturing • Rig • Concept Art • UI/UX</strong></li>
+          </ul>
+        </div>
+        <div class="hero-right">
+          <div class="portrait-wrap">
+            <img src="assets/hero-portrait.png" alt="Ariadna — portrait" id="heroPortrait">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT / Education -->
+    <section id="about" class="about container reveal">
+      <div class="about-grid">
+        <div>
+          <h2 data-t="about_title">About me</h2>
+          <p data-t="about_p">I am an artist, designer, and game developer. Since I was a child I loved inventing worlds and creatures in my notebooks; today I transform them into digital universes.</p>
+          <h3 data-t="about_edu">Education</h3>
+          <p data-t="about_edu_val">B.S. in Game Design and Development — Cuauhtemoc University (2022 - 2026)</p>
+        </div>
+        <div>
+          <h3 data-t="about_soft">Software</h3>
+          <ul class="soft-list">
+            <li><img src="assets/icons/photoshop.png" alt=""> Photoshop</li>
+            <li><img src="assets/icons/blender.png" alt=""> Blender</li>
+            <li><img src="assets/icons/maya.png" alt=""> Maya</li>
+            <li><img src="assets/icons/substance.png" alt=""> Substance 3D Painter</li>
+            <li><img src="assets/icons/unity.png" alt=""> Unity</li>
+            <li><img src="assets/icons/unreal.png" alt=""> Unreal Engine</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills" class="skills container reveal">
+      <h2 data-t="skills_title">Skills</h2>
+      <div class="skill-grid">
+        <div class="skill-card">
+          <h4 data-t="skills_art_title">Digital Art</h4>
+          <p data-t="skills_art_desc">Concept art, illustration, color palettes, and composition.</p>
+        </div>
+        <div class="skill-card">
+          <h4 data-t="skills_mod_title">3D Modeling</h4>
+          <p data-t="skills_mod_desc">Modeling, retopology, texturing, and game engine optimization.</p>
+        </div>
+        <div class="skill-card">
+          <h4 data-t="skills_anim_title">Animation & Rig</h4>
+          <p data-t="skills_anim_desc">Rigging, character animation, and export to game engines.</p>
+        </div>
+        <div class="skill-card">
+          <h4 data-t="skills_des_title">Game Design</h4>
+          <p data-t="skills_des_desc">Mechanics design, UI/UX, and game design documentation.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="projects container reveal">
+      <h2 data-t="projects_title">Featured Projects</h2>
+      <div id="projectsGrid" class="projects-grid">
+        <!-- tarjetas generadas por JS -->
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section id="gallery" class="gallery container reveal">
+      <h2 data-t="gallery_title">Models & Illustrations</h2>
+      <div class="gallery-categories">
+        <!-- Diorama -->
+        <div class="gallery-category">
+          <h3 data-t="gallery_cat_dio">Diorama</h3>
+          <div class="carousel-wrapper">
+            <div class="carousel animate-fade" id="carousel-dio" data-category="Dio">
+              <!-- Imágenes cargadas dinámicamente -->
+            </div>
+            <div class="carousel-dots"></div>
+          </div>
+        </div>
+        
+        <!-- Concept Art -->
+        <div class="gallery-category">
+          <h3 data-t="gallery_cat_concept">Concept Art</h3>
+          <div class="carousel-wrapper">
+            <div class="carousel animate-fade" id="carousel-concept" data-category="Concept">
+              <!-- Imágenes cargadas dinámicamente -->
+            </div>
+            <div class="carousel-dots"></div>
+          </div>
+        </div>
+        
+        <!-- Modelado 3D -->
+        <div class="gallery-category">
+          <h3 data-t="gallery_cat_3d">3D Modeling</h3>
+          <div class="carousel-wrapper">
+            <div class="carousel animate-fade" id="carousel-modelado" data-category="Modelado">
+              <!-- Imágenes cargadas dinámicamente -->
+            </div>
+            <div class="carousel-dots"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <footer id="contact" class="contact container reveal">
+      <div class="contact-grid">
+        <div>
+          <h3 data-t="contact_title">Contact</h3>
+          <p>Email: <a href="mailto:aryreyessandoval@gmail.com">aryreyessandoval@gmail.com</a></p>
+          <p>Itch: <a href="https://gonyame.itch.io" target="_blank" rel="noopener">gonyame.itch.io</a></p>
+          <p>LinkedIn: <a href="https://www.linkedin.com/in/aryreyes" target="_blank" rel="noopener">linkedin.com/in/aryreyes</a></p>
+          <p data-t="contact_loc">Location: San Luis Potosi, Mexico</p>
+        </div>
+        <div>
+          <h3 data-t="contact_cv">Download CV</h3>
+          <a class="btn" href="assets/CV-Ariadna.pdf" download data-t="contact_cv_btn">Download PDF</a>
+        </div>
+      </div>
+      <p class="copyright">&copy; <span id="year"></span> <span data-t="copyright">Ariadna. Game Design & Development.</span></p>
+    </footer>
+  </div>
+
+  <!-- MODAL / LIGHTBOX (Global) -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true">
+      <button id="modalClose" class="modal-close" aria-label="Close">✕</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

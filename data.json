@@ -1,0 +1,44 @@
+{
+  "projects": [
+    {
+      "title": "Magical Flavour",
+      "year": "2022 - 2025",
+      "thumbnail": "assets/projects/magical-flavour.png",
+      "tools": "Blender • Unity • Photoshop",
+      "description": "Videojuego de cocinar pociones en un mundo mágico con multijugador. Invitados a Game Conference MX 2025.",
+      "role": "Mecánicas, UI, Rigeo, Animación, Modelado 3D, Texturizado, Conceptualización",
+      "link": "",
+      "gallery": ["assets/projects/mf-01.png","assets/projects/mf-02.png"]
+    },
+    {
+      "title": "Feather Thieve",
+      "year": "2022 - 2025",
+      "thumbnail": "assets/projects/feather-thieve.png",
+      "tools": "Maya • Photoshop",
+      "description": "Juego de terror protagonizado por 'Pistacho' el perico; enfoque en concientización sobre trata de animales.",
+      "role": "Diseño de mecánicas, UI, Rigeo, Animación, Modelado",
+      "link": "",
+      "gallery": []
+    },
+    {
+      "title": "PlushOut",
+      "year": "2024 - En desarrollo",
+      "thumbnail": "assets/projects/plushout.png",
+      "tools": "ClipStudio • Photoshop",
+      "description": "Proyecto financiado parcialmente via Kickstarter. Diseño y desarrollo en progreso.",
+      "role": "Diseño, Documentación, Animación, Modelado",
+      "link": "",
+      "gallery": []
+    },
+    {
+      "title": "SeedHero (Steam)",
+      "year": "2023",
+      "thumbnail": "assets/projects/seedhero.png",
+      "tools": "ClipStudio • Unity",
+      "description": "Ritmo y jardinería: juego en Steam.",
+      "role": "Diseño de personajes, animación, ilustración 2D.",
+      "link": "https://store.steampowered.com/app/3171560/SeedHero/",
+      "gallery": []
+    }
+  ]
+}
